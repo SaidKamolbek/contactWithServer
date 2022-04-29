@@ -1,5 +1,6 @@
 package com.example.dependencyinjection.domain.impl
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dependencyinjection.data.model.request.RegisterUser
@@ -18,32 +19,43 @@ class RegisterRepositoryImpl @Inject constructor(
     private val newsApi: NewsApi
 ) : RegisterRepository {
 
-    private val registerMessage: MutableLiveData<String> = MutableLiveData()
+    private val registerMessage: MutableLiveData<RegisterMessage> = MutableLiveData()
     val error: MutableLiveData<String> = MutableLiveData()
     private val verifyMessage: MutableLiveData<VerifyMessage> = MutableLiveData()
 
-    override suspend fun registerUser(user: RegisterUser): LiveData<String> {
-        newsApi.registerUser(user).enqueue(object : Callback<RegisterUser> {
+    override fun registerUser(user: RegisterUser): LiveData<RegisterMessage> {
+        newsApi.registerUser(user).enqueue(object : Callback<RegisterMessage> {
             override fun onResponse(
-                call: Call<RegisterUser>,
-                response: Response<RegisterUser>
+                call: Call<RegisterMessage>,
+                response: Response<RegisterMessage>
             ) {
                 if (response.isSuccessful) {
-                    registerMessage.value = response.body()?.phone
+                    when (response.code()) {
+                        in 200..299 -> {
+                            registerMessage.value = response.body()
+                            Log.d("TTT", response.body()!!.message)
+                        }
+                        in 400..499 -> error.value = response.message()
+
+                    }
+                    Log.d("TTT", response.message())
+
                 } else {
                     error.value = response.message()
+                    Log.d("TTT", response.message())
                 }
             }
 
-            override fun onFailure(call: Call<RegisterUser>, t: Throwable) {
+            override fun onFailure(call: Call<RegisterMessage>, t: Throwable) {
                 error.value = t.message
+                Log.d("TTT", t.message.toString())
             }
         })
         return registerMessage
     }
 
 
-    override suspend fun verifyCode(code: VerifyCode): LiveData<VerifyMessage> {
+    override fun verifyCode(code: VerifyCode): LiveData<VerifyMessage> {
         newsApi.verifyCode(code).enqueue(object : Callback<VerifyMessage> {
             override fun onResponse(call: Call<VerifyMessage>, response: Response<VerifyMessage>) {
                 if (response.isSuccessful) {

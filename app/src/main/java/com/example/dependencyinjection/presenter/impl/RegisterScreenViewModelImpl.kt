@@ -20,20 +20,16 @@ class RegisterScreenViewModelImpl @Inject constructor(
     private val registerRepository: RegisterRepositoryImpl,
 ) : ViewModel(), RegisterScreenViewModel {
 
-    override var registerMessage: LiveData<String> = MutableLiveData()
+    override var registerMessage: LiveData<RegisterMessage> = MutableLiveData()
     override var verifyMessage: LiveData<VerifyMessage> = MutableLiveData()
     override val error: LiveData<String> = registerRepository.error
 
     override fun registerUser(user: RegisterUser) {
-        viewModelScope.launch {
-            registerMessage = registerRepository.registerUser(user)
-        }
+        registerMessage = registerRepository.registerUser(user)
     }
 
 
     override fun verifyCode(code: VerifyCode) {
-        viewModelScope.launch {
-            verifyMessage = registerRepository.verifyCode(code)
-        }
+        verifyMessage = registerRepository.verifyCode(code)
     }
 }

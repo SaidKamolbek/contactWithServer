@@ -8,7 +8,7 @@ import com.example.dependencyinjection.data.model.responce.VerifyMessage
 
 interface RegisterRepository {
 
-    suspend fun registerUser(user: RegisterUser): LiveData<String>
+    fun registerUser(user: RegisterUser): LiveData<RegisterMessage>
 
-    suspend fun verifyCode(code: VerifyCode): LiveData<VerifyMessage>
+    fun verifyCode(code: VerifyCode): LiveData<VerifyMessage>
 }

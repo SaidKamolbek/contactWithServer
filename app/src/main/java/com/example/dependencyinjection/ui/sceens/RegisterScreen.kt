@@ -29,12 +29,12 @@ class RegisterScreen : Fragment(R.layout.register_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewModel.registerMessage.observe(viewLifecycleOwner) {
-            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, it.message, Snackbar.LENGTH_SHORT).show()
         }
 //        viewModel.verifyMessage.observe(viewLifecycleOwner) {
 //            Snackbar.make(binding.root, it.token, Snackbar.LENGTH_SHORT).show()
 //        }
-        viewModel.error.observe(viewLifecycleOwner){
+        viewModel.error.observe(viewLifecycleOwner) {
             Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
         }
 

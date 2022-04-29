@@ -19,11 +19,10 @@ interface NewsApi {
 
     // register user
     @POST("register")
-    suspend fun registerUser(@Body user: RegisterUser): Call<RegisterUser>
+    fun registerUser(@Body user: RegisterUser): Call<RegisterMessage>
 
     @POST("verify")
-    suspend fun verifyCode(@Body code: VerifyCode): Call<VerifyMessage>
-
+    fun verifyCode(@Body code: VerifyCode): Call<VerifyMessage>
 
 
 }
